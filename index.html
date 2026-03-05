@@ -8,533 +8,104 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #0a0a0f;
-      --surface: #13131a;
-      --border: #1e1e2e;
-      --accent: #fe2c55;
-      --accent2: #25f4ee;
-      --text: #f0f0f5;
-      --muted: #6b6b80;
-    }
-
+    :root { --bg: #0a0a0f; --surface: #13131a; --border: #1e1e2e; --accent: #fe2c55; --accent2: #25f4ee; --text: #f0f0f5; --muted: #6b6b80; }
     html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* Background grain */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* NAV */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px 48px;
-      background: rgba(10,10,15,0.85);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .logo {
-      font-family: 'Syne', sans-serif;
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(10,10,15,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+    .logo { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; }
     .logo span { color: var(--accent); }
-
     .nav-links { display: flex; gap: 32px; align-items: center; }
-
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
     .nav-links a:hover { color: var(--text); }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 22px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s;
-      border: none;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
-    }
-
-    .btn-primary:hover { background: #e0203d; transform: translateY(-1px); }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s; border: none; font-family: 'DM Sans', sans-serif; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #e0203d; }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
     .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
-
-    /* HERO */
-    .hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 120px 24px 80px;
-      overflow: hidden;
-    }
-
-    .hero-glow {
-      position: absolute;
-      width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(254,44,85,0.15) 0%, transparent 70%);
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-
-    .hero-glow2 {
-      position: absolute;
-      width: 400px;
-      height: 400px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(37,244,238,0.08) 0%, transparent 70%);
-      top: 30%;
-      right: 10%;
-      pointer-events: none;
-    }
-
-    .hero-content { position: relative; z-index: 1; max-width: 800px; }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(254,44,85,0.1);
-      border: 1px solid rgba(254,44,85,0.3);
-      color: var(--accent);
-      padding: 6px 16px;
-      border-radius: 100px;
-      font-size: 13px;
-      font-weight: 500;
-      margin-bottom: 32px;
-      animation: fadeUp 0.6s ease both;
-    }
-
-    h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(48px, 8vw, 88px);
-      font-weight: 800;
-      line-height: 1.0;
-      letter-spacing: -2px;
-      margin-bottom: 24px;
-      animation: fadeUp 0.6s 0.1s ease both;
-    }
-
-    h1 .highlight {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero p {
-      font-size: 18px;
-      color: var(--muted);
-      line-height: 1.7;
-      max-width: 560px;
-      margin: 0 auto 40px;
-      animation: fadeUp 0.6s 0.2s ease both;
-    }
-
-    .hero-cta {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-      animation: fadeUp 0.6s 0.3s ease both;
-    }
-
-    .btn-tiktok {
-      background: linear-gradient(135deg, #fe2c55, #ff004f);
-      color: #fff;
-      padding: 14px 32px;
-      font-size: 16px;
-      border-radius: 10px;
-      box-shadow: 0 8px 32px rgba(254,44,85,0.3);
-    }
-
+    .btn-tiktok { background: linear-gradient(135deg, #fe2c55, #ff004f); color: #fff; padding: 14px 32px; font-size: 16px; border-radius: 10px; box-shadow: 0 8px 32px rgba(254,44,85,0.3); }
     .btn-tiktok:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(254,44,85,0.4); }
 
-    .btn-tiktok svg { width: 20px; height: 20px; }
+    .hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 120px 24px 80px; }
+    .hero-glow { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(254,44,85,0.15) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; }
+    .hero-content { position: relative; z-index: 1; max-width: 800px; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(254,44,85,0.1); border: 1px solid rgba(254,44,85,0.3); color: var(--accent); padding: 6px 16px; border-radius: 100px; font-size: 13px; font-weight: 500; margin-bottom: 32px; }
+    h1 { font-family: 'Syne', sans-serif; font-size: clamp(48px, 8vw, 88px); font-weight: 800; line-height: 1.0; letter-spacing: -2px; margin-bottom: 24px; }
+    h1 .highlight { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p { font-size: 18px; color: var(--muted); line-height: 1.7; max-width: 560px; margin: 0 auto 40px; }
+    .hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 
-    /* FEATURES */
     section { padding: 100px 48px; position: relative; z-index: 1; }
+    .section-label { font-size: 12px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+    h2 { font-family: 'Syne', sans-serif; font-size: clamp(32px, 5vw, 52px); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 16px; }
 
-    .section-label {
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 16px;
-    }
-
-    h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(32px, 5vw, 52px);
-      font-weight: 800;
-      letter-spacing: -1.5px;
-      margin-bottom: 16px;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-      margin-top: 64px;
-      max-width: 1200px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .feature-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px;
-      transition: all 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 64px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; transition: all 0.3s; }
     .feature-card:hover { border-color: rgba(254,44,85,0.3); transform: translateY(-4px); }
-    .feature-card:hover::before { opacity: 1; }
-
-    .feature-icon {
-      width: 48px;
-      height: 48px;
-      background: rgba(254,44,85,0.1);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
-
-    .feature-card h3 {
-      font-family: 'Syne', sans-serif;
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
+    .feature-icon { width: 48px; height: 48px; background: rgba(254,44,85,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; }
+    .feature-card h3 { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 10px; }
     .feature-card p { color: var(--muted); font-size: 15px; line-height: 1.6; }
 
-    /* HOW IT WORKS */
     .how-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-
-    .steps { display: flex; gap: 0; max-width: 900px; margin: 64px auto 0; position: relative; }
-
-    .steps::before {
-      content: '';
-      position: absolute;
-      top: 28px;
-      left: 10%;
-      right: 10%;
-      height: 1px;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      opacity: 0.3;
-    }
-
+    .steps { display: flex; max-width: 900px; margin: 64px auto 0; position: relative; }
+    .steps::before { content: ''; position: absolute; top: 28px; left: 10%; right: 10%; height: 1px; background: linear-gradient(90deg, var(--accent), var(--accent2)); opacity: 0.3; }
     .step { flex: 1; text-align: center; padding: 0 16px; }
-
-    .step-num {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: var(--bg);
-      border: 2px solid var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Syne', sans-serif;
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--accent);
-      margin: 0 auto 20px;
-      position: relative;
-      z-index: 1;
-    }
-
+    .step-num { width: 56px; height: 56px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: var(--accent); margin: 0 auto 20px; position: relative; z-index: 1; }
     .step h3 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 8px; }
     .step p { color: var(--muted); font-size: 14px; line-height: 1.6; }
 
-    /* LOGIN SECTION */
-    .login-section {
-      text-align: center;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    .login-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 48px 40px;
-      margin-top: 48px;
-    }
-
-    .tiktok-logo {
-      font-size: 48px;
-      margin-bottom: 24px;
-    }
-
-    .login-card h3 {
-      font-family: 'Syne', sans-serif;
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-
-    .login-card p { color: var(--muted); font-size: 15px; margin-bottom: 32px; line-height: 1.6; }
-
-    .divider { height: 1px; background: var(--border); margin: 24px 0; }
-
-    .permissions {
-      text-align: left;
-      margin-bottom: 32px;
-    }
-
+    .connect-section { text-align: center; }
+    .login-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 48px 40px; max-width: 460px; margin: 48px auto 0; }
+    .login-card h3 { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+    .login-card > p { color: var(--muted); font-size: 15px; margin-bottom: 32px; line-height: 1.6; }
+    .permissions { text-align: left; margin-bottom: 32px; }
     .permissions h4 { font-size: 13px; color: var(--muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
-
-    .permission-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 0;
-      font-size: 14px;
-      border-bottom: 1px solid var(--border);
-    }
-
+    .permission-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; font-size: 14px; border-bottom: 1px solid var(--border); }
     .permission-item:last-child { border-bottom: none; }
-
-    .perm-icon { color: var(--accent2); font-size: 16px; }
-
-    .btn-login-tiktok {
-      width: 100%;
-      justify-content: center;
-      background: #000;
-      color: #fff;
-      border: 2px solid #333;
-      padding: 16px;
-      font-size: 16px;
-      border-radius: 12px;
-      gap: 12px;
-    }
-
+    .perm-icon { color: var(--accent2); }
+    .btn-login-tiktok { width: 100%; justify-content: center; background: #000; color: #fff; border: 2px solid #333; padding: 16px; font-size: 16px; border-radius: 12px; }
     .btn-login-tiktok:hover { background: #111; border-color: var(--accent); }
 
-    /* UPLOAD DEMO */
-    .upload-demo {
-      max-width: 600px;
-      margin: 48px auto 0;
-      display: none;
-    }
-
-    .upload-demo.active { display: block; }
-
-    .upload-area {
-      background: var(--surface);
-      border: 2px dashed var(--border);
-      border-radius: 16px;
-      padding: 64px 32px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .upload-area:hover { border-color: var(--accent); background: rgba(254,44,85,0.05); }
-
-    .upload-icon { font-size: 48px; margin-bottom: 16px; }
-
-    .upload-area h3 { font-family: 'Syne', sans-serif; font-size: 20px; margin-bottom: 8px; }
-    .upload-area p { color: var(--muted); font-size: 14px; }
-
-    .upload-form { margin-top: 24px; }
-
-    .form-group { margin-bottom: 20px; text-align: left; }
-
-    .form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 8px; color: var(--muted); }
-
-    .form-group input, .form-group textarea, .form-group select {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 16px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      transition: border-color 0.2s;
-    }
-
-    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
-
-    .form-group textarea { height: 100px; resize: vertical; }
-
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px 20px;
-      margin-bottom: 24px;
-    }
-
-    .avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 18px;
-    }
-
+    .upload-view { display: none; max-width: 560px; margin: 48px auto 0; }
+    .upload-view.active { display: block; }
+    .user-info { display: flex; align-items: center; gap: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; }
+    .avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; overflow: hidden; flex-shrink: 0; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
     .user-name { font-weight: 600; font-size: 15px; }
     .user-handle { color: var(--muted); font-size: 13px; }
+    .connected-badge { margin-left: auto; background: rgba(37,244,238,0.1); color: var(--accent2); border: 1px solid rgba(37,244,238,0.3); padding: 4px 12px; border-radius: 100px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+    .upload-area { background: var(--surface); border: 2px dashed var(--border); border-radius: 16px; padding: 64px 32px; text-align: center; cursor: pointer; transition: all 0.3s; }
+    .upload-area:hover { border-color: var(--accent); background: rgba(254,44,85,0.05); }
+    .upload-icon { font-size: 48px; margin-bottom: 16px; }
+    .upload-area h3 { font-family: 'Syne', sans-serif; font-size: 20px; margin-bottom: 8px; }
+    .upload-area p { color: var(--muted); font-size: 14px; }
+    .form-group { margin-bottom: 20px; text-align: left; margin-top: 24px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 8px; color: var(--muted); }
+    .form-group textarea, .form-group select { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; transition: border-color 0.2s; }
+    .form-group textarea { height: 100px; resize: vertical; }
+    .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--accent); }
+    .status-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin-top: 16px; display: none; }
+    .status-bar.active { display: flex; align-items: center; gap: 12px; }
+    .spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .connected-badge {
-      margin-left: auto;
-      background: rgba(37,244,238,0.1);
-      color: var(--accent2);
-      border: 1px solid rgba(37,244,238,0.3);
-      padding: 4px 12px;
-      border-radius: 100px;
-      font-size: 12px;
-      font-weight: 600;
-    }
+    .loading-overlay { position: fixed; inset: 0; background: rgba(10,10,15,0.95); z-index: 300; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 24px; }
+    .loading-overlay.active { display: flex; }
+    .loading-overlay p { color: var(--muted); font-size: 15px; }
+    .big-spinner { width: 56px; height: 56px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
 
-    /* FOOTER */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 48px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: gap;
-      position: relative;
-      z-index: 1;
-    }
-
-    .footer-links { display: flex; gap: 32px; }
-
-    .footer-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 14px;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover { color: var(--text); }
-
-    .footer-copy { color: var(--muted); font-size: 13px; }
-
-    /* ANIMATIONS */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* MODAL */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(8px);
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-    }
-
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 200; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
     .modal-overlay.active { opacity: 1; pointer-events: all; }
-
-    .modal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 48px;
-      max-width: 440px;
-      width: 90%;
-      transform: translateY(20px);
-      transition: transform 0.3s;
-      text-align: center;
-    }
-
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 48px; max-width: 440px; width: 90%; transform: translateY(20px); transition: transform 0.3s; text-align: center; }
     .modal-overlay.active .modal { transform: translateY(0); }
-
     .modal h3 { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 12px; }
     .modal p { color: var(--muted); font-size: 15px; margin-bottom: 32px; }
-
     .success-icon { font-size: 64px; margin-bottom: 24px; }
 
+    footer { border-top: 1px solid var(--border); padding: 48px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; position: relative; z-index: 1; }
+    .footer-links { display: flex; gap: 32px; }
+    .footer-links a { color: var(--muted); text-decoration: none; font-size: 14px; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy { color: var(--muted); font-size: 13px; }
     @media (max-width: 768px) {
       nav { padding: 16px 24px; }
       section { padding: 80px 24px; }
@@ -545,22 +116,18 @@
   </style>
 </head>
 <body>
-
-  <!-- NAV -->
   <nav>
     <div class="logo">Doan<span>Watch</span></div>
     <div class="nav-links">
       <a href="#features">Features</a>
       <a href="#how">How it works</a>
-      <a href="#privacy">Privacy</a>
+      <a href="/privacy">Privacy</a>
       <a href="#connect" class="btn btn-primary">Connect TikTok</a>
     </div>
   </nav>
 
-  <!-- HERO -->
   <section class="hero">
     <div class="hero-glow"></div>
-    <div class="hero-glow2"></div>
     <div class="hero-content">
       <div class="hero-badge">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15.3a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.69a8.27 8.27 0 0 0 4.84 1.55V6.79a4.85 4.85 0 0 1-1.08-.1z"/></svg>
@@ -570,7 +137,7 @@
       <p>Connect your TikTok account and publish videos directly from our platform. Schedule, upload, and manage your content with ease.</p>
       <div class="hero-cta">
         <a href="#connect" class="btn btn-tiktok">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15.3a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.69a8.27 8.27 0 0 0 4.84 1.55V6.79a4.85 4.85 0 0 1-1.08-.1z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15.3a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.69a8.27 8.27 0 0 0 4.84 1.55V6.79a4.85 4.85 0 0 1-1.08-.1z"/></svg>
           Connect with TikTok
         </a>
         <a href="#how" class="btn btn-outline">Learn More</a>
@@ -578,238 +145,296 @@
     </div>
   </section>
 
-  <!-- FEATURES -->
   <section id="features">
-    <div style="text-align:center; max-width:600px; margin: 0 auto;">
+    <div style="text-align:center; max-width:600px; margin:0 auto;">
       <div class="section-label">Features</div>
       <h2>Everything you need to publish</h2>
-      <p style="color:var(--muted); font-size:16px; line-height:1.7;">A powerful platform for creators to manage and publish video content directly to TikTok.</p>
+      <p style="color:var(--muted);font-size:16px;line-height:1.7;">A powerful platform for creators to publish video content directly to TikTok.</p>
     </div>
     <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">🔐</div>
-        <h3>Secure TikTok Login</h3>
-        <p>Connect your TikTok account securely using official OAuth2 authentication. Your credentials are never stored.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🎬</div>
-        <h3>Direct Video Upload</h3>
-        <p>Upload videos directly to TikTok via the official Content Posting API. Supports MP4 format up to 50MB.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">📅</div>
-        <h3>Schedule Posts</h3>
-        <p>Plan your content calendar and schedule videos to be published at the perfect time for your audience.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">✍️</div>
-        <h3>Caption & Hashtags</h3>
-        <p>Add engaging captions and trending hashtags to maximize your video's reach and discoverability.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">📊</div>
-        <h3>Publishing Status</h3>
-        <p>Track the status of your video uploads in real-time — from processing to published.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🔒</div>
-        <h3>Privacy Control</h3>
-        <p>Choose who can see your videos — public, friends only, or private — before publishing.</p>
-      </div>
+      <div class="feature-card"><div class="feature-icon">🔐</div><h3>Secure TikTok Login</h3><p>Connect via TikTok's official OAuth2 authentication. Your credentials are never stored on our servers.</p></div>
+      <div class="feature-card"><div class="feature-icon">🎬</div><h3>Direct Video Upload</h3><p>Upload videos directly via the official Content Posting API. Supports MP4 up to 50MB.</p></div>
+      <div class="feature-card"><div class="feature-icon">📅</div><h3>Schedule Posts</h3><p>Plan your content calendar and schedule videos to publish at the perfect time.</p></div>
+      <div class="feature-card"><div class="feature-icon">✍️</div><h3>Caption & Hashtags</h3><p>Add engaging captions and hashtags to maximize your video's reach and discoverability.</p></div>
+      <div class="feature-card"><div class="feature-icon">📊</div><h3>Publishing Status</h3><p>Track the status of your uploads in real-time — from processing to published.</p></div>
+      <div class="feature-card"><div class="feature-icon">🔒</div><h3>Privacy Control</h3><p>Choose who can see your videos — public, friends only, or private — before publishing.</p></div>
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
   <section id="how" class="how-section">
-    <div style="text-align:center; max-width:600px; margin: 0 auto;">
+    <div style="text-align:center; max-width:600px; margin:0 auto;">
       <div class="section-label">How it works</div>
       <h2>Three simple steps</h2>
     </div>
     <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <h3>Connect TikTok</h3>
-        <p>Click "Connect with TikTok" and authorize our app using your TikTok account via official OAuth2.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <h3>Upload Video</h3>
-        <p>Select your video file, add a caption, hashtags, and choose your privacy settings.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <h3>Publish</h3>
-        <p>Hit publish and your video goes live on TikTok instantly via the Content Posting API.</p>
-      </div>
+      <div class="step"><div class="step-num">1</div><h3>Connect TikTok</h3><p>Click "Connect with TikTok" and authorize via TikTok's official OAuth2.</p></div>
+      <div class="step"><div class="step-num">2</div><h3>Upload Video</h3><p>Select your MP4, add caption, hashtags, and choose privacy settings.</p></div>
+      <div class="step"><div class="step-num">3</div><h3>Publish</h3><p>Hit publish — your video goes live via the Content Posting API.</p></div>
     </div>
   </section>
 
-  <!-- CONNECT / UPLOAD -->
   <section id="connect">
-    <div class="login-section" id="loginView">
-      <div class="section-label" style="text-align:center;">Get Started</div>
-      <h2 style="text-align:center;">Connect your<br>TikTok Account</h2>
-      <div class="login-card">
-        <div class="tiktok-logo">
+    <div class="connect-section">
+      <div class="section-label">Get Started</div>
+      <h2>Connect your TikTok Account</h2>
+
+      <div class="login-card" id="loginCard">
+        <div style="margin-bottom:24px;">
           <svg width="56" height="56" viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15.3a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.69a8.27 8.27 0 0 0 4.84 1.55V6.79a4.85 4.85 0 0 1-1.08-.1z"/></svg>
         </div>
         <h3>Authorize DoanWatch</h3>
         <p>We'll request permission to upload and publish videos on your behalf using TikTok's official API.</p>
-
         <div class="permissions">
           <h4>Permissions requested</h4>
-          <div class="permission-item">
-            <span class="perm-icon">✓</span>
-            <span>Read your basic profile information</span>
-          </div>
-          <div class="permission-item">
-            <span class="perm-icon">✓</span>
-            <span>Upload videos to your account</span>
-          </div>
-          <div class="permission-item">
-            <span class="perm-icon">✓</span>
-            <span>Publish videos on your behalf</span>
-          </div>
+          <div class="permission-item"><span class="perm-icon">✓</span><span>Read your basic profile information</span></div>
+          <div class="permission-item"><span class="perm-icon">✓</span><span>Upload videos to your account</span></div>
+          <div class="permission-item"><span class="perm-icon">✓</span><span>Publish videos on your behalf</span></div>
         </div>
-
-        <button class="btn btn-login-tiktok btn" onclick="handleTikTokLogin()">
+        <button class="btn btn-login-tiktok" onclick="loginWithTikTok()">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15.3a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.69a8.27 8.27 0 0 0 4.84 1.55V6.79a4.85 4.85 0 0 1-1.08-.1z"/></svg>
           Continue with TikTok
         </button>
       </div>
-    </div>
 
-    <!-- UPLOAD VIEW (shown after login) -->
-    <div class="upload-demo" id="uploadView">
-      <div class="section-label" style="text-align:center;">Upload Video</div>
-      <h2 style="text-align:center; margin-bottom:8px;">Publish to TikTok</h2>
-
-      <div class="user-info">
-        <div class="avatar">D</div>
-        <div>
-          <div class="user-name">DoanWatch User</div>
-          <div class="user-handle">@doanwatch</div>
+      <div class="upload-view" id="uploadView">
+        <div class="user-info">
+          <div class="avatar" id="userAvatar">T</div>
+          <div>
+            <div class="user-name" id="userName">TikTok User</div>
+            <div class="user-handle" id="userHandle">@user</div>
+          </div>
+          <div class="connected-badge">✓ Connected</div>
         </div>
-        <div class="connected-badge">✓ Connected</div>
-      </div>
 
-      <div class="upload-area" onclick="document.getElementById('videoFile').click()">
-        <div class="upload-icon">🎬</div>
-        <h3>Select Video</h3>
-        <p>Click to browse or drag & drop your MP4 file here<br><small style="color:var(--muted)">Max 50MB • MP4 format</small></p>
-        <input type="file" id="videoFile" accept="video/mp4" style="display:none" onchange="handleFileSelect(this)">
-      </div>
+        <div class="upload-area" onclick="document.getElementById('videoFile').click()">
+          <div class="upload-icon">🎬</div>
+          <h3>Select Video</h3>
+          <p>Click to browse or drag & drop your MP4 file<br><small style="color:var(--muted)">Max 50MB • MP4 format</small></p>
+          <input type="file" id="videoFile" accept="video/mp4" style="display:none" onchange="handleFileSelect(this)">
+        </div>
 
-      <div class="upload-form">
         <div class="form-group">
           <label>Caption</label>
-          <textarea placeholder="Write a caption for your video... #trending #viral"></textarea>
+          <textarea id="caption" placeholder="Write a caption... #trending #viral"></textarea>
         </div>
         <div class="form-group">
           <label>Privacy</label>
-          <select>
-            <option>Public</option>
-            <option>Friends only</option>
-            <option>Private</option>
+          <select id="privacy">
+            <option value="SELF_ONLY">Private (Self Only)</option>
+            <option value="FRIEND_ONLY">Friends Only</option>
+            <option value="PUBLIC_TO_EVERYONE">Public</option>
           </select>
         </div>
-        <button class="btn btn-tiktok btn" style="width:100%; justify-content:center; font-size:16px; padding:16px;" onclick="handlePublish()">
+
+        <div class="status-bar" id="statusBar">
+          <div class="spinner"></div>
+          <span id="statusText">Uploading...</span>
+        </div>
+
+        <button class="btn btn-tiktok" style="width:100%;justify-content:center;font-size:16px;padding:16px;margin-top:16px;" onclick="publishVideo()">
           🚀 Publish to TikTok
         </button>
-        <button class="btn btn-outline btn" style="width:100%; justify-content:center; margin-top:12px;" onclick="handleDisconnect()">
+        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:12px;" onclick="disconnect()">
           Disconnect TikTok
         </button>
       </div>
     </div>
   </section>
 
-  <!-- PRIVACY POLICY -->
-  <section id="privacy" style="background: var(--surface); border-top: 1px solid var(--border);">
-    <div style="max-width: 800px; margin: 0 auto;">
-      <div class="section-label">Legal</div>
-      <h2>Privacy Policy</h2>
-      <p style="color:var(--muted); margin-top: 24px; line-height: 1.8; font-size: 15px;">
-        <strong style="color:var(--text)">Last updated: March 2026</strong><br><br>
-        DoanWatch ("we", "us", or "our") operates the DoanWatch platform. This page informs you of our policies regarding the collection, use, and disclosure of Personal Data when you use our Service.<br><br>
-        <strong style="color:var(--text)">TikTok Integration</strong><br>
-        When you connect your TikTok account, we request access to your basic profile information and permission to upload and publish videos on your behalf via TikTok's official Content Posting API. We do not store your TikTok credentials. We only use the permissions you explicitly grant.<br><br>
-        <strong style="color:var(--text)">Data We Collect</strong><br>
-        We collect your TikTok open_id and display name to identify your connected account. Video content you upload is transmitted directly to TikTok and not permanently stored on our servers.<br><br>
-        <strong style="color:var(--text)">Data Security</strong><br>
-        All data transmissions are encrypted via HTTPS. Access tokens are stored securely and never shared with third parties.<br><br>
-        <strong style="color:var(--text)">Contact Us</strong><br>
-        If you have any questions about this Privacy Policy, please contact us at: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ea9a98839c8b8993aa8e858b84c79d8b9e8982c4848f9e86838c93c48b9a9a">[email&#160;protected]</a>
-      </p>
-    </div>
-  </section>
-
-  <!-- TERMS -->
-  <section id="terms">
-    <div style="max-width: 800px; margin: 0 auto;">
-      <div class="section-label">Legal</div>
-      <h2>Terms of Service</h2>
-      <p style="color:var(--muted); margin-top: 24px; line-height: 1.8; font-size: 15px;">
-        <strong style="color:var(--text)">Last updated: March 2026</strong><br><br>
-        By accessing or using DoanWatch, you agree to be bound by these Terms of Service.<br><br>
-        <strong style="color:var(--text)">Use of Service</strong><br>
-        DoanWatch provides a platform for publishing video content to TikTok. You must comply with TikTok's Terms of Service and Community Guidelines when using our platform.<br><br>
-        <strong style="color:var(--text)">Content Responsibility</strong><br>
-        You are solely responsible for the content you publish through our platform. You must not upload content that violates TikTok's policies or any applicable laws.<br><br>
-        <strong style="color:var(--text)">Account Security</strong><br>
-        You are responsible for maintaining the security of your TikTok account credentials. We are not liable for any unauthorized access to your account.<br><br>
-        <strong style="color:var(--text)">Termination</strong><br>
-        We reserve the right to terminate or suspend access to our service at our sole discretion, without notice, for conduct that we believe violates these Terms of Service.<br><br>
-        <strong style="color:var(--text)">Contact</strong><br>
-        For any questions regarding these terms: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="80f4e5f2edf3c0e4efe1eeadf7e1f4e3e8aeeee5f4ece9e6f9aee1f0f0">[email&#160;protected]</a>
-      </p>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
   <footer>
     <div class="logo">Doan<span>Watch</span></div>
     <div class="footer-links">
-      <a href="#privacy">Privacy Policy</a>
-      <a href="#terms">Terms of Service</a>
-      <a href="/cdn-cgi/l/email-protection#0b787e7b7b64797f4b6f646a65267c6a7f686325656e7f67626d72256a7b7b">Contact</a>
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms of Service</a>
+      <a href="mailto:support@dudo-tiktok.netlify.app">Contact</a>
     </div>
     <div class="footer-copy">© 2026 DoanWatch. All rights reserved.</div>
   </footer>
 
-  <!-- SUCCESS MODAL -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="big-spinner"></div>
+    <p id="loadingText">Connecting to TikTok...</p>
+  </div>
+
   <div class="modal-overlay" id="successModal">
     <div class="modal">
       <div class="success-icon">🎉</div>
       <h3>Video Published!</h3>
-      <p>Your video has been successfully submitted to TikTok. It will appear on your profile shortly.</p>
-      <button class="btn btn-primary btn" style="width:100%; justify-content:center;" onclick="closeModal()">Done</button>
+      <p>Your video has been submitted to TikTok successfully. It will appear on your profile shortly.</p>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="closeModal()">Done</button>
     </div>
   </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    function handleTikTokLogin() {
-      // In production, this would redirect to TikTok OAuth
-      // For demo purposes, simulate login
-      document.getElementById('loginView').style.display = 'none';
-      document.getElementById('uploadView').classList.add('active');
-      window.scrollTo({ top: document.getElementById('connect').offsetTop - 80, behavior: 'smooth' });
+  <script>
+    const CLIENT_KEY    = 'sbaw01j5zuppklxi10';
+    const CLIENT_SECRET = 'L1hm3ZHaqtYYtWtcD0v8tr9MOfWq4ZfR';
+    const REDIRECT_URI  = 'https://dudo-tiktok.netlify.app/';
+    const SCOPES        = 'user.info.basic,video.upload,video.publish';
+
+    let accessToken = null;
+    let videoFile   = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const code   = params.get('code');
+      const error  = params.get('error');
+      if (error) { alert('TikTok login cancelled: ' + error); return; }
+      if (code) {
+        window.history.replaceState({}, document.title, '/');
+        exchangeToken(code);
+        return;
+      }
+      const saved = sessionStorage.getItem('tt_access_token');
+      if (saved) {
+        accessToken = saved;
+        showUploadView();
+        fetchUserInfo();
+      }
+    });
+
+    function loginWithTikTok() {
+      const state = Math.random().toString(36).substring(2, 10);
+      sessionStorage.setItem('tt_state', state);
+      const url = new URL('https://www.tiktok.com/v2/auth/authorize/');
+      url.searchParams.set('client_key',    CLIENT_KEY);
+      url.searchParams.set('scope',         SCOPES);
+      url.searchParams.set('response_type', 'code');
+      url.searchParams.set('redirect_uri',  REDIRECT_URI);
+      url.searchParams.set('state',         state);
+      window.location.href = url.toString();
+    }
+
+    async function exchangeToken(code) {
+      showLoading('Connecting your TikTok account...');
+      try {
+        const body = new URLSearchParams({
+          client_key:    CLIENT_KEY,
+          client_secret: CLIENT_SECRET,
+          code:          code,
+          grant_type:    'authorization_code',
+          redirect_uri:  REDIRECT_URI,
+        });
+        const res  = await fetch('https://open.tiktokapis.com/v2/oauth/token/', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body:    body.toString(),
+        });
+        const data = await res.json();
+        hideLoading();
+        if (data.access_token) {
+          accessToken = data.access_token;
+          sessionStorage.setItem('tt_access_token', accessToken);
+          showUploadView();
+          fetchUserInfo();
+        } else {
+          alert('Token exchange failed: ' + JSON.stringify(data));
+        }
+      } catch (e) {
+        hideLoading();
+        alert('Error: ' + e.message);
+      }
+    }
+
+    async function fetchUserInfo() {
+      try {
+        const res  = await fetch('https://open.tiktokapis.com/v2/user/info/?fields=display_name,avatar_url,username', {
+          headers: { 'Authorization': 'Bearer ' + accessToken }
+        });
+        const data = await res.json();
+        const user = data?.data?.user;
+        if (user) {
+          document.getElementById('userName').textContent   = user.display_name || 'TikTok User';
+          document.getElementById('userHandle').textContent = '@' + (user.username || 'user');
+          if (user.avatar_url) {
+            document.getElementById('userAvatar').innerHTML = '<img src="' + user.avatar_url + '" alt="avatar">';
+          } else {
+            document.getElementById('userAvatar').textContent = (user.display_name || 'T')[0].toUpperCase();
+          }
+        }
+      } catch(e) {}
     }
 
     function handleFileSelect(input) {
       if (input.files && input.files[0]) {
-        const file = input.files[0];
-        const uploadArea = input.closest('.upload-area');
-        uploadArea.innerHTML = `
-          <div class="upload-icon">✅</div>
-          <h3>${file.name}</h3>
-          <p>${(file.size / 1024 / 1024).toFixed(2)} MB • Ready to publish</p>
-        `;
+        videoFile = input.files[0];
+        const area = input.closest('.upload-area');
+        area.innerHTML = '<div class="upload-icon">✅</div><h3>' + videoFile.name + '</h3><p>' + (videoFile.size/1024/1024).toFixed(2) + ' MB — Ready to publish</p>';
       }
     }
 
-    function handlePublish() {
-      document.getElementById('successModal').classList.add('active');
+    async function publishVideo() {
+      if (!videoFile)   { alert('Please select a video file first.'); return; }
+      if (!accessToken) { alert('Please connect TikTok first.'); return; }
+      const caption      = document.getElementById('caption').value || '';
+      const privacyLevel = document.getElementById('privacy').value;
+      const fileSize     = videoFile.size;
+      showStatus('Initializing upload...');
+      try {
+        const initRes = await fetch('https://open.tiktokapis.com/v2/post/publish/video/init/', {
+          method:  'POST',
+          headers: { 'Authorization': 'Bearer ' + accessToken, 'Content-Type': 'application/json; charset=UTF-8' },
+          body: JSON.stringify({
+            post_info: { title: caption.substring(0,150), privacy_level: privacyLevel, disable_duet: false, disable_stitch: false, disable_comment: false },
+            source_info: { source: 'FILE_UPLOAD', video_size: fileSize, chunk_size: fileSize, total_chunk_count: 1 }
+          })
+        });
+        const initData = await initRes.json();
+        if (!initData?.data?.upload_url) { hideStatus(); alert('Init failed: ' + JSON.stringify(initData)); return; }
+        const uploadUrl = initData.data.upload_url;
+        const publishId = initData.data.publish_id;
+        showStatus('Uploading video...');
+        await fetch(uploadUrl, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'video/mp4', 'Content-Range': 'bytes 0-' + (fileSize-1) + '/' + fileSize, 'Content-Length': String(fileSize) },
+          body: videoFile,
+        });
+        showStatus('Processing...');
+        let attempts = 0;
+        const poll = async () => {
+          const sRes = await fetch('https://open.tiktokapis.com/v2/post/publish/status/fetch/', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + accessToken, 'Content-Type': 'application/json; charset=UTF-8' },
+            body: JSON.stringify({ publish_id: publishId })
+          });
+          const sData = await sRes.json();
+          const st = sData?.data?.status;
+          if (st === 'PUBLISH_COMPLETE' || st === 'SEND_TO_USER_INBOX') {
+            hideStatus();
+            document.getElementById('successModal').classList.add('active');
+          } else if (st === 'FAILED') {
+            hideStatus(); alert('Publish failed: ' + JSON.stringify(sData));
+          } else if (attempts < 20) {
+            attempts++; setTimeout(poll, 3000);
+          } else {
+            hideStatus(); alert('Timeout. Please check your TikTok app.');
+          }
+        };
+        setTimeout(poll, 3000);
+      } catch(e) { hideStatus(); alert('Error: ' + e.message); }
     }
 
-    function closeModal() {
-      document.getElementById('succe
+    function showUploadView() {
+      document.getElementById('loginCard').style.display = 'none';
+      document.getElementById('uploadView').classList.add('active');
+    }
+    function disconnect() {
+      sessionStorage.removeItem('tt_access_token');
+      accessToken = null; videoFile = null;
+      document.getElementById('loginCard').style.display = 'block';
+      document.getElementById('uploadView').classList.remove('active');
+    }
+    function showStatus(msg) {
+      document.getElementById('statusText').textContent = msg;
+      document.getElementById('statusBar').classList.add('active');
+    }
+    function hideStatus() { document.getElementById('statusBar').classList.remove('active'); }
+    function showLoading(msg) {
+      document.getElementById('loadingText').textContent = msg || 'Loading...';
+      document.getElementById('loadingOverlay').classList.add('active');
+    }
+    function hideLoading() { document.getElementById('loadingOverlay').classList.remove('active'); }
+    function closeModal() { document.getElementById('successModal').classList.remove('active'); }
+    document.getElementById('successModal').addEventListener('click', function(e) { if(e.target===this) closeModal(); });
+  </script>
+</body>
+</html>
