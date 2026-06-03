@@ -1,0 +1,33 @@
+{
+  "users": [
+    {
+      "id": "user_1",
+      "name": "admin",
+      "email": "admin@example.com",
+      "phone": "0123456789",
+      "role": "admin",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": "user_1780472923379_nhovffahl",
+      "name": "ccc",
+      "email": "ccc@gmail.com",
+      "phone": "123123123",
+      "role": "user",
+      "createdAt": "2026-06-03T07:48:43.379Z",
+      "updatedAt": "2026-06-03T07:48:43.379Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": "order_1",
+      "refuserId": "user_1",
+      "voucherCode": "VC001",
+      "amount": 100000,
+      "status": "pending",
+      "createdAt": "2024-01-02T00:00:00Z",
+      "updatedAt": "2024-01-02T00:00:00Z"
+    }
+  ]
+}

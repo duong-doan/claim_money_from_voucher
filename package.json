@@ -1,0 +1,27 @@
+{
+  "name": "claim_money_from_voucher",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duong-doan/claim_money_from_voucher.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/duong-doan/claim_money_from_voucher/issues"
+  },
+  "homepage": "https://github.com/duong-doan/claim_money_from_voucher#readme",
+  "dependencies": {
+    "next": "^14.2.35",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
