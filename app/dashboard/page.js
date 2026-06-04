@@ -1,12 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 export default function DashboardPage() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('orders');
+
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
@@ -15,22 +18,37 @@ export default function DashboardPage() {
 
     if (!userId) {
       router.push('/login');
-    } else {
-      setUser({
-        id: userId,
-        name: userName,
-        role: userRole,
-      });
-      setLoading(false);
+      return;
     }
+
+    setUser({
+      id: userId,
+      name: userName,
+      role: userRole,
+    });
+
+    setLoading(false);
   }, [router]);
 
+  useEffect(() => {
+    router.replace('/dashboard/orders');
+  }, []);
+
   const handleLogout = () => {
-    localStorage.removeItem('userId');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('adminId');
+    localStorage.clear();
     router.push('/');
+  };
+
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+
+    if (tab === 'orders') {
+      router.push('/dashboard/orders');
+    }
+
+    if (tab === 'users') {
+      router.push('/dashboard/users');
+    }
   };
 
   if (loading) {
@@ -44,31 +62,30 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className='container'>
-      <div className='card'>
-        <h1>Bảng điều khiển</h1>
+    <main className='dashboard-layout'>
+      {/* TABS */}
+      <div className='tabs'>
+        <button
+          className={`tab ${pathname === '/dashboard/orders' ? 'active' : ''}`}
+          onClick={() => router.push('/dashboard/orders')}
+        >
+          Quản lý đơn hàng
+        </button>
 
-        <div className='dashboard-header'>
-          <p className='welcome-text'>
-            Chào mừng, <strong>{user?.name}</strong> ({user?.role})
-          </p>
-          <button onClick={handleLogout} className='btn-logout'>
-            Đăng xuất
+        {user?.role === 'admin' && (
+          <button
+            className={`tab ${pathname === '/dashboard/users' ? 'active' : ''}`}
+            onClick={() => router.push('/dashboard/users')}
+          >
+            Quản lý người dùng
           </button>
-        </div>
+        )}
+      </div>
 
-        <div className='dashboard-menu'>
-          <a href='/orders' className='menu-item'>
-            <h3>Quản lý đơn hàng</h3>
-            <p>Xem và cập nhật trạng thái đơn hàng của bạn</p>
-          </a>
-
-          {user?.role === 'admin' && (
-            <a href='/users' className='menu-item'>
-              <h3>Quản lý người dùng</h3>
-              <p>Tạo, chỉnh sửa, xóa người dùng</p>
-            </a>
-          )}
+      {/* CONTENT */}
+      <div className='dashboard-content'>
+        <div className='card'>
+          <h2>Chọn chức năng từ tab phía trên</h2>
         </div>
       </div>
     </main>

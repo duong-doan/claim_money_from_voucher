@@ -8,6 +8,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e) => {
@@ -18,9 +19,7 @@ export default function LoginPage() {
     try {
       const response = await fetch('/api/users/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ identifier, password }),
       });
 
@@ -31,11 +30,9 @@ export default function LoginPage() {
         localStorage.setItem('userId', user.id);
         localStorage.setItem('userName', user.name);
         localStorage.setItem('userRole', user.role);
-
         if (user.role === 'admin') {
           localStorage.setItem('adminId', user.id);
         }
-
         router.push('/dashboard');
       } else {
         setError(result.error || 'Số điện thoại hoặc mật khẩu không đúng');
@@ -49,43 +46,81 @@ export default function LoginPage() {
   };
 
   return (
-    <main className='container'>
-      <div className='card'>
-        <h1>Đăng nhập</h1>
+    <main className='login-page'>
+      {/* Top decoration */}
+      <div className='login-hero'>
+        <div className='login-logo'>🎟</div>
+        <h1 className='login-brand'>Voucher Claim</h1>
+        <p className='login-tagline'>Đăng nhập để tiếp tục</p>
+      </div>
 
-        {error && <p className='error-message'>{error}</p>}
+      <div className='login-card-wrap'>
+        <div className='login-card'>
+          {error && (
+            <div className='login-error'>
+              <span>⚠️</span> {error}
+            </div>
+          )}
 
-        <form onSubmit={handleLogin}>
-          <div className='field'>
-            <label>Email hoặc số điện thoại</label>
-            <input
-              type='text'
-              placeholder='admin@gmail.com hoặc 09xxxxxxxx'
-              required
-              value={identifier}
-              onChange={(e) => setIdentifier(e.target.value)}
-            />
+          <form onSubmit={handleLogin} noValidate>
+            <div className='login-field'>
+              <label htmlFor='login-id'>Email hoặc số điện thoại</label>
+              <div className='login-input-wrap'>
+                <span className='login-input-icon'>👤</span>
+                <input
+                  id='login-id'
+                  type='text'
+                  placeholder='email@gmail.com hoặc 09xxxxxxxx'
+                  required
+                  autoComplete='username'
+                  inputMode='email'
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className='login-field'>
+              <label htmlFor='login-pw'>Mật khẩu</label>
+              <div className='login-input-wrap'>
+                <span className='login-input-icon'>🔒</span>
+                <input
+                  id='login-pw'
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder='Nhập mật khẩu'
+                  required
+                  autoComplete='current-password'
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type='button'
+                  className='login-pw-toggle'
+                  onClick={() => setShowPassword((v) => !v)}
+                  aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                >
+                  {showPassword ? '🙈' : '👁'}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type='submit'
+              className='login-submit-btn'
+              disabled={loading}
+            >
+              {loading ? <span className='login-spinner' /> : '🔑 Đăng nhập'}
+            </button>
+          </form>
+
+          <div className='login-divider'>
+            <span>Chưa có tài khoản?</span>
           </div>
 
-          <div className='field'>
-            <label>Mật khẩu</label>
-            <input
-              type='password'
-              placeholder='Mật khẩu'
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-
-          <button type='submit' disabled={loading}>
-            {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
-          </button>
-        </form>
-
-        <p className='register-link'>
-          Chưa có tài khoản? <a href='/'>Đăng ký tại đây</a>
-        </p>
+          <a href='/' className='login-register-btn'>
+            ✍️ Đăng ký miễn phí
+          </a>
+        </div>
       </div>
     </main>
   );
