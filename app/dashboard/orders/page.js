@@ -273,8 +273,8 @@ export default function OrdersPage() {
     <div className='container'>
       <div className='card'>
         {/* ── Header ── */}
-        <div className='dashboard-header'>
-          {!isAdmin && (
+        {!isAdmin && (
+          <div className='dashboard-header'>
             <>
               <p className='welcome-text'>
                 Mỗi đơn hàng hoàn thành sẽ nhận <strong>50,000 points</strong>.
@@ -308,8 +308,8 @@ export default function OrdersPage() {
                 )}
               </div>
             </>
-          )}
-        </div>
+          </div>
+        )}
         {/* ── Tabs (user only) ── */}
         {!isAdmin && (
           <div className='user-order-tabs'>
@@ -523,9 +523,9 @@ export default function OrdersPage() {
               <>
                 {/* Desktop table */}
                 <div className='table-wrapper desktop-table'>
-                  <div>
-                    SAU KHI ADMIN NHẬN ĐƯỢC ĐƠN VÀ CHUYỂN TRẠNG THÁI, BẠN SẼ
-                    NHẬN ĐƯỢC POINTS
+                  <div style={{ textAlign: 'center', color: 'green' }}>
+                    SAU KHI ADMIN NHẬN ĐƯỢC ĐƠN VÀ CHUYỂN TRẠNG THÁI <br /> BẠN
+                    SẼ NHẬN ĐƯỢC POINTS
                   </div>
                   <table className='orders-table'>
                     <thead>

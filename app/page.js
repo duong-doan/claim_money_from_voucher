@@ -100,7 +100,7 @@ export default function HomePage() {
           <div className='home-form-header'>
             <h2 className='home-form-title'>Tạo tài khoản</h2>
             <a href='/login' className='home-login-link'>
-              Đã có tài khoản? <strong>Đăng nhập</strong>
+              Đã có tài khoản? <strong>ĐĂNG NHẬP</strong>
             </a>
           </div>
 
@@ -111,6 +111,17 @@ export default function HomePage() {
           )}
 
           <form onSubmit={handleSubmit} noValidate>
+            <div
+              style={{
+                color: 'red',
+                fontStyle: 'italic',
+                textTransform: 'capitalize',
+                marginBottom: '20px',
+              }}
+            >
+              Vui lòng nhập SĐT và email thật <br /> (hỗ trợ telegram
+              @BuyPhoneInfoBot)
+            </div>
             {/* Name */}
             <div className='home-field'>
               <label htmlFor='reg-name'>Họ và tên</label>
@@ -127,7 +138,6 @@ export default function HomePage() {
                 />
               </div>
             </div>
-
             {/* Referral */}
             <div className='home-field'>
               <label htmlFor='referral-phone'>
@@ -148,7 +158,6 @@ export default function HomePage() {
                 />
               </div>
             </div>
-
             {/* Email */}
             <div className='home-field'>
               <label htmlFor='reg-email'>Email</label>
@@ -166,7 +175,6 @@ export default function HomePage() {
                 />
               </div>
             </div>
-
             {/* Phone */}
             <div className='home-field'>
               <label htmlFor='reg-phone'>
@@ -187,7 +195,6 @@ export default function HomePage() {
                 />
               </div>
             </div>
-
             {/* Password */}
             <div className='home-field'>
               <label htmlFor='reg-pw'>Mật khẩu</label>
@@ -212,7 +219,6 @@ export default function HomePage() {
                 </button>
               </div>
             </div>
-
             <button
               type='submit'
               className='home-submit-btn'

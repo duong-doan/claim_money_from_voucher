@@ -9,6 +9,7 @@ export default function UsersPage() {
   const [editingUser, setEditingUser] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
   const [search, setSearch] = useState('');
+  console.log('users', users);
 
   useEffect(() => {
     const storedAdminId = localStorage.getItem('adminId');
@@ -89,6 +90,7 @@ export default function UsersPage() {
       u.email?.toLowerCase().includes(search.toLowerCase()) ||
       u.phone?.includes(search),
   );
+  console.log('filtered', filtered);
 
   if (!adminId) {
     return (
@@ -155,6 +157,7 @@ export default function UsersPage() {
                 <tr>
                   <th>#</th>
                   <th>Tên</th>
+                  <th>Points</th>
                   <th>Email</th>
                   <th>Số điện thoại</th>
                   <th>Role</th>
@@ -167,6 +170,7 @@ export default function UsersPage() {
                     <td style={{ color: '#9ca3af', fontSize: 12 }}>
                       {idx + 1}
                     </td>
+
                     <td>
                       {editingUser?.id === user.id ? (
                         <input
@@ -187,6 +191,9 @@ export default function UsersPage() {
                           <span>{user.name}</span>
                         </div>
                       )}
+                    </td>
+                    <td style={{ fontSize: 12 }}>
+                      {user.availablePoints || 0}
                     </td>
                     <td>
                       {editingUser?.id === user.id ? (
