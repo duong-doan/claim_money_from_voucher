@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, redirect } from 'next/navigation';
 
 export default function DashboardPage() {
   const [user, setUser] = useState(null);
@@ -12,27 +12,47 @@ export default function DashboardPage() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const userId = localStorage.getItem('userId');
-    const userName = localStorage.getItem('userName');
-    const userRole = localStorage.getItem('userRole');
+    const loadUser = async () => {
+      try {
+        const userId = localStorage.getItem('userId');
 
-    if (!userId) {
-      router.push('/login');
-      return;
-    }
+        if (!userId) {
+          router.push('/login');
+          return;
+        }
 
-    setUser({
-      id: userId,
-      name: userName,
-      role: userRole,
-    });
+        const response = await fetch(
+          `/api/users/get-by-id?userId=${encodeURIComponent(userId)}`,
+        );
 
-    setLoading(false);
+        const result = await response.json();
+
+        if (!result.success) {
+          localStorage.clear();
+          router.push('/login');
+          return;
+        }
+
+        setUser({
+          id: result.data.id,
+          name: result.data.name,
+          role: result.data.role,
+        });
+
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        localStorage.clear();
+        router.push('/login');
+      }
+    };
+
+    loadUser();
   }, [router]);
 
   useEffect(() => {
     router.replace('/dashboard/orders');
-  }, []);
+  }, [router]);
 
   const handleLogout = () => {
     localStorage.clear();

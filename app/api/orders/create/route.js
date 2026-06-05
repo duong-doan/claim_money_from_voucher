@@ -28,6 +28,7 @@ export async function POST(req) {
       status,
       amount: amount ?? price ?? 0,
       price: price ?? amount ?? 0,
+      rewardPaid: false,
     });
 
     return Response.json({

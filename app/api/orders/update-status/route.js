@@ -1,4 +1,5 @@
-import { updateOrderStatus } from '@/app/lib/orders';
+import { updateOrder, updateOrderStatus } from '@/app/lib/orders';
+import { rewardOrder } from '@/app/lib/users';
 
 export async function PATCH(req) {
   try {
@@ -22,6 +23,17 @@ export async function PATCH(req) {
       status,
       statusByAdmin,
     );
+
+    if (
+      updatedOrder.status === 'completed' &&
+      updatedOrder.statusByAdmin === 'completed'
+    ) {
+      await rewardOrder(updatedOrder);
+    }
+
+    await updateOrder(updatedOrder.id, {
+      rewardPaid: true,
+    });
 
     return Response.json({
       success: true,

@@ -9,6 +9,7 @@ export default function HomePage() {
     name: '',
     phone: '',
     password: '',
+    referralPhone: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -22,6 +23,13 @@ export default function HomePage() {
     e.preventDefault();
     setError('');
     setLoading(true);
+
+    if (form.referralPhone && form.referralPhone === form.phone) {
+      setError(
+        'Bạn không thể sử dụng số điện thoại của chính mình làm mã giới thiệu.',
+      );
+      return;
+    }
 
     try {
       const response = await fetch('/api/register', {
@@ -120,6 +128,27 @@ export default function HomePage() {
               </div>
             </div>
 
+            {/* Referral */}
+            <div className='home-field'>
+              <label htmlFor='referral-phone'>
+                Mã giới thiệu
+                <span className='home-field-hint'>không bắt buộc</span>
+              </label>
+
+              <div className='home-input-wrap'>
+                <span className='home-input-icon'>🎁</span>
+
+                <input
+                  id='referral-phone'
+                  type='tel'
+                  placeholder='Số điện thoại người giới thiệu'
+                  inputMode='tel'
+                  value={form.referralPhone}
+                  onChange={update('referralPhone')}
+                />
+              </div>
+            </div>
+
             {/* Email */}
             <div className='home-field'>
               <label htmlFor='reg-email'>Email</label>
@@ -192,11 +221,6 @@ export default function HomePage() {
               {loading ? <span className='home-spinner' /> : '🚀 Đăng ký ngay'}
             </button>
           </form>
-
-          <p className='home-terms'>
-            Bằng cách đăng ký, bạn đồng ý với <a href='#'>điều khoản sử dụng</a>{' '}
-            của chúng tôi.
-          </p>
         </div>
       </div>
     </main>

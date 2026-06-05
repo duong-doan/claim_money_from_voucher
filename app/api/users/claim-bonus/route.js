@@ -1,5 +1,5 @@
 import { getUserById, updateUser } from '@/app/lib/users';
-import { getOrdersByUserId } from '@/app/lib/orders';
+import { sendTelegramMessage } from '@/app/lib/telegram';
 
 export async function POST(req) {
   try {
@@ -17,6 +17,7 @@ export async function POST(req) {
     }
 
     const user = await getUserById(userId);
+
     if (!user) {
       return Response.json(
         {
@@ -27,47 +28,45 @@ export async function POST(req) {
       );
     }
 
-    const orders = await getOrdersByUserId(userId);
-    const completedOrders = orders.filter(
-      (order) =>
-        order.statusByAdmin === 'completed' && order.status === 'completed',
-    );
+    const bonusAmount = Number(user.availablePoints || 0);
 
-    if (completedOrders.length === 0) {
+    if (bonusAmount <= 0) {
       return Response.json(
         {
           success: false,
-          error: 'No completed orders with admin complete status',
+          error: 'Không có điểm khả dụng để nhận thưởng',
         },
         { status: 400 },
       );
     }
 
-    const bonusAmount = completedOrders.length * 50000;
-
-    // Update user points and availablePoints based on completed orders.
-    await updateUser(userId, {
-      points: bonusAmount,
-      availablePoints: bonusAmount,
-      bankAccount,
-      bankName,
-    });
-
-    // After claiming, clear the points fields.
     const updatedUser = await updateUser(userId, {
-      points: 0,
+      points: Math.max(0, Number(user.points || 0) - bonusAmount),
       availablePoints: 0,
       lastBonusDate: new Date().toISOString(),
       bankAccount,
       bankName,
     });
 
+    await sendTelegramMessage(`
+    💰 Yêu cầu rút thưởng mới
+
+    👤 User: ${user.name}
+    📞 SĐT: ${user.phone}
+
+    🏦 Ngân hàng: ${bankName}
+    💳 STK: ${bankAccount}
+
+    💵 Số tiền: ${bonusAmount.toLocaleString()} VNĐ
+
+    ⏰ Thời gian: ${new Date().toLocaleString('vi-VN')}
+    `);
+
     return Response.json({
       success: true,
       message: 'Bonus claimed successfully',
       data: updatedUser,
       bonusAmount,
-      calculatedPoints: bonusAmount,
     });
   } catch (error) {
     console.error('Error claiming bonus:', error);

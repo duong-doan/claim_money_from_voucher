@@ -5,24 +5,42 @@ import { useRouter, usePathname } from 'next/navigation';
 
 export default function DashboardLayout({ children }) {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    const userId = localStorage.getItem('userId');
+    const loadUser = async () => {
+      const userId = localStorage.getItem('userId');
 
-    if (!userId) {
-      router.push('/login');
-      return;
-    }
+      if (!userId) {
+        router.push('/login');
+        return;
+      }
 
-    setUser({
-      id: userId,
-      name: localStorage.getItem('userName'),
-      role: localStorage.getItem('userRole'),
-    });
-  }, []);
+      try {
+        const response = await fetch(`/api/users/get-by-id?userId=${userId}`);
+
+        const result = await response.json();
+
+        if (!result.success) {
+          localStorage.clear();
+          router.push('/login');
+          return;
+        }
+
+        setUser(result.data);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+        router.push('/login');
+      }
+    };
+
+    loadUser();
+  }, [router]);
 
   const logout = () => {
     localStorage.clear();
@@ -44,6 +62,14 @@ export default function DashboardLayout({ children }) {
     user: 'Người dùng',
   };
 
+  if (loading) {
+    return (
+      <div className='container'>
+        <p>Đang tải...</p>
+      </div>
+    );
+  }
+
   return (
     <div className='dashboard-layout'>
       {/* ── Topbar ── */}
@@ -54,27 +80,9 @@ export default function DashboardLayout({ children }) {
           {user && (
             <>
               {/* Avatar initials */}
-              <div
-                style={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.18)',
-                  border: '1.5px solid rgba(255,255,255,0.35)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: 13,
-                  fontWeight: 700,
-                  color: '#fff',
-                  flexShrink: 0,
-                }}
-              >
-                {getInitials(user.name)}
-              </div>
 
               {/* Name + role — hide on very small screens */}
-              <div className='user-info' style={{ display: 'none' }}>
+              <div className='user-info'>
                 <span className='user-name'>{user.name}</span>
                 <span className='user-role'>
                   {roleLabel[user.role] ?? user.role}

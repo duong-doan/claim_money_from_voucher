@@ -11,31 +11,12 @@ export async function POST(req) {
       email: body.email,
       phone: body.phone,
       password: body.password,
+      referralPhone: body.referralPhone,
+      availablePoints: 0,
+      points: 0,
     });
 
     console.log('User created:', newUser);
-
-    // Also send to n8n webhook if needed
-    try {
-      const response = await fetch(
-        'http://localhost:5678/webhook-test/register',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ ...body, userId: newUser.id }),
-        },
-      );
-
-      const text = await response.text();
-      console.log('n8n response:', response.status, text);
-    } catch (webhookError) {
-      console.warn(
-        'Webhook failed but user was created:',
-        webhookError.message,
-      );
-    }
 
     return Response.json({
       success: true,

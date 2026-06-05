@@ -9,6 +9,9 @@ export async function POST(req) {
       email: body.email,
       phone: body.phone,
       password: body.password,
+      points: 0, // Default points for new users
+      availablePoints: 0, // Default available points for new users
+      referralPhone: body.referralPhone,
     });
 
     return Response.json({

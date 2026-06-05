@@ -1,4 +1,4 @@
-const API_BASE = 'https://602d0cc330ba720017223bfc.mockapi.io';
+const API_BASE = process.env.ENDPOINT_API;
 
 async function handleResponse(response) {
   const text = await response.text();
@@ -38,20 +38,30 @@ export async function createOrder(orderData) {
   return handleResponse(response);
 }
 
-export async function updateOrderStatus(orderId, status, statusByAdmin) {
-  const body = {};
-  if (status) body.status = status;
-  if (statusByAdmin) body.statusByAdmin = statusByAdmin;
-
+export async function updateOrder(orderId, updateData) {
   const response = await fetch(`${API_BASE}/orders/${orderId}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify(updateData),
   });
 
   return handleResponse(response);
+}
+
+export async function updateOrderStatus(orderId, status, statusByAdmin) {
+  const body = {};
+
+  if (status) {
+    body.status = status;
+  }
+
+  if (statusByAdmin) {
+    body.statusByAdmin = statusByAdmin;
+  }
+
+  return updateOrder(orderId, body);
 }
 
 export async function getOrderById(orderId) {

@@ -1,8 +1,10 @@
-const API_BASE = 'https://602d0cc330ba720017223bfc.mockapi.io';
+const API_BASE = process.env.ENDPOINT_API;
+
+import { comparePassword, hashPassword } from './password';
 
 export const ADMIN_CREDENTIALS = {
-  email: 'admin@gmail.com',
-  password: 'Admin123',
+  email: process.env.ADMIN_EMAIL,
+  password: process.env.ADMIN_PASSWORD,
   phone: '0900000000',
   name: 'Admin',
 };
@@ -31,12 +33,37 @@ export async function createUser(userData) {
     throw new Error('Số điện thoại đã tồn tại');
   }
 
+  const hashedPassword = await hashPassword(userData.password);
+
+  let referredByUserId = null;
+  console.log('userData', userData);
+
+  //   if (userData.referralPhone) {
+  //     const referrer = await getUserByPhone(userData.referralPhone);
+  //     console.log('referrer', referrer)
+
+  //     if (!referrer) {
+  //       throw new Error('Mã giới thiệu không tồn tại');
+  //     }
+
+  //     referredByUserId = referrer.id;
+  //   }
+
+  const referrer = userData.referralPhone
+    ? await getUserByPhone(userData.referralPhone)
+    : null;
+  console.log('referrer', referrer);
+
   const body = {
     name: userData.name,
     email: userData.email,
     phone: userData.phone,
-    password: userData.password,
+    password: hashedPassword,
     role: userData.role || 'user',
+    referredBy: referrer?.phone || null,
+    referredByUserId: referrer?.id || null,
+    availablePoints: 0,
+    points: 0,
   };
 
   const response = await fetch(`${API_BASE}/users`, {
@@ -92,25 +119,31 @@ export async function getUserByPhone(phone) {
 
 export async function getUserByCredentials(identifier, password) {
   const users = await getAllUsers();
+
   if (!Array.isArray(users)) {
     return null;
   }
 
+  // tìm user theo email hoặc phone
   const user = users.find(
-    (entry) =>
-      (entry.phone === identifier || entry.email === identifier) &&
-      entry.password === password,
+    (entry) => entry.phone === identifier || entry.email === identifier,
   );
 
   if (user) {
-    return user;
+    const isMatch = await comparePassword(password, user.password);
+
+    if (isMatch) {
+      return user;
+    }
   }
 
+  // xử lý tài khoản admin mặc định
   if (
     identifier === ADMIN_CREDENTIALS.email &&
     password === ADMIN_CREDENTIALS.password
   ) {
     let adminUser = await getUserByEmail(identifier);
+
     if (adminUser) {
       return adminUser;
     }
@@ -123,15 +156,14 @@ export async function getUserByCredentials(identifier, password) {
         password: ADMIN_CREDENTIALS.password,
         role: 'admin',
       });
+
       return adminUser;
     } catch (error) {
-      // If admin account cannot be created, fall back to a local hardcoded admin object.
       return {
         id: 'admin',
         name: ADMIN_CREDENTIALS.name,
         email: ADMIN_CREDENTIALS.email,
         phone: ADMIN_CREDENTIALS.phone,
-        password: ADMIN_CREDENTIALS.password,
         role: 'admin',
       };
     }
@@ -143,4 +175,34 @@ export async function getUserByCredentials(identifier, password) {
 export async function getAllUsers() {
   const response = await fetch(`${API_BASE}/users`);
   return handleResponse(response);
+}
+
+export async function rewardOrder(order) {
+  const user = await getUserById(order.userId);
+
+  if (!user) return;
+
+  const hasReferrer = !!user.referredByUserId;
+
+  // User được giới thiệu
+  if (hasReferrer) {
+    await updateUser(user.id, {
+      points: Number(user.points || 0) + 30000,
+      availablePoints: Number(user.availablePoints || 0) + 30000,
+    });
+
+    const referrer = await getUserById(user.referredByUserId);
+
+    if (referrer) {
+      await updateUser(referrer.id, {
+        points: Number(referrer.points || 0) + 20000,
+        availablePoints: Number(referrer.availablePoints || 0) + 20000,
+      });
+    }
+  } else {
+    await updateUser(user.id, {
+      points: Number(user.points || 0) + 50000,
+      availablePoints: Number(user.availablePoints || 0) + 50000,
+    });
+  }
 }

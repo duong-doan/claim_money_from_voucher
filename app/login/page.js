@@ -29,7 +29,6 @@ export default function LoginPage() {
         const user = result.data;
         localStorage.setItem('userId', user.id);
         localStorage.setItem('userName', user.name);
-        localStorage.setItem('userRole', user.role);
         if (user.role === 'admin') {
           localStorage.setItem('adminId', user.id);
         }
