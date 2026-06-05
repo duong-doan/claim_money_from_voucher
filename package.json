@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/duong-doan/claim_money_from_voucher#readme",
   "dependencies": {
-    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
     "next": "^14.2.35",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
