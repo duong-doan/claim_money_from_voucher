@@ -24,17 +24,41 @@ export default function HomePage() {
     setError('');
     setLoading(true);
 
+    const phoneRegex = /^(0|\+84)[3|5|7|8|9][0-9]{8}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     if (form.referralPhone && form.referralPhone === form.phone) {
       setError(
         'Bạn không thể sử dụng số điện thoại của chính mình làm mã giới thiệu.',
       );
+      setLoading(false);
+      return;
+    }
+
+    if (!phoneRegex.test(form.phone.trim())) {
+      setError('Số điện thoại không hợp lệ.');
+      setLoading(false);
+      return;
+    }
+
+    if (form.referralPhone && !phoneRegex.test(form.referralPhone.trim())) {
+      setError('Mã giới thiệu phải là số điện thoại hợp lệ.');
+      setLoading(false);
+      return;
+    }
+
+    if (!emailRegex.test(form.email.trim())) {
+      setError('Email không hợp lệ.');
+      setLoading(false);
       return;
     }
 
     try {
       const response = await fetch('/api/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(form),
       });
 
@@ -103,6 +127,17 @@ export default function HomePage() {
               Đã có tài khoản? <strong>ĐĂNG NHẬP</strong>
             </a>
           </div>
+          <div
+            style={{
+              color: 'red',
+              fontStyle: 'italic',
+              textTransform: 'capitalize',
+              marginBottom: '20px',
+            }}
+          >
+            Vui lòng nhập SĐT và email thật <br /> (hỗ trợ telegram
+            @BuyPhoneInfoBot)
+          </div>
 
           {error && (
             <div className='home-error'>
@@ -111,17 +146,6 @@ export default function HomePage() {
           )}
 
           <form onSubmit={handleSubmit} noValidate>
-            <div
-              style={{
-                color: 'red',
-                fontStyle: 'italic',
-                textTransform: 'capitalize',
-                marginBottom: '20px',
-              }}
-            >
-              Vui lòng nhập SĐT và email thật <br /> (hỗ trợ telegram
-              @BuyPhoneInfoBot)
-            </div>
             {/* Name */}
             <div className='home-field'>
               <label htmlFor='reg-name'>Họ và tên</label>

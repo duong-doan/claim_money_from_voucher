@@ -1,5 +1,6 @@
+import { sendBuyerRewardMail, sendReferralRewardMail } from '@/app/lib/mail';
 import { updateOrder, updateOrderStatus } from '@/app/lib/orders';
-import { rewardOrder } from '@/app/lib/users';
+import { getUserById, rewardOrder } from '@/app/lib/users';
 
 export async function PATCH(req) {
   try {
@@ -29,6 +30,32 @@ export async function PATCH(req) {
       updatedOrder.statusByAdmin === 'completed'
     ) {
       await rewardOrder(updatedOrder);
+
+      const buyer = await getUserById(updatedOrder.userId);
+
+      if (buyer?.email) {
+        await sendBuyerRewardMail({
+          userName: buyer.name,
+          email: buyer.email,
+          orderCode: updatedOrder.code,
+          rewardPoints: 50000,
+        });
+      }
+
+      if (buyer?.referredByUserId) {
+        const refUser = await getUserById(buyer.referredByUserId);
+
+        if (refUser?.email) {
+          await sendReferralRewardMail({
+            email: refUser.email,
+            referrerName: refUser.name,
+            referredUserName: buyer.name,
+            orderCode: updatedOrder.code,
+            rewardPoints: 20000,
+            availablePoints: refUser.availablePoints,
+          });
+        }
+      }
     }
 
     await updateOrder(updatedOrder.id, {
